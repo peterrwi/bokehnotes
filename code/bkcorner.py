@@ -7,8 +7,8 @@ from bokeh.models import ColumnDataSource, Span
 from bokeh.server.server import Server
 
 class BKCorner():
-    def __init__(self, df, params=[], logify=False, output='notebook', notebook_url="http://localhost:8888", **kwargs):
-        self.df = df
+    def __init__(self, df, params=[], trim_factor=1, logify=False, output='notebook', notebook_url="http://localhost:8888", **kwargs):
+        self.df = df.iloc[::trim_factor].reset_index(drop=True)
         self.params = params
         self.logify = logify
         self.kwargs = kwargs
