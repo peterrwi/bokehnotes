@@ -7,7 +7,7 @@ from bokeh.models import ColumnDataSource, Span
 from bokeh.server.server import Server
 
 class BKCorner():
-    def __init__(self, df, params=[], trim_factor=1, logify=False, output='notebook', notebook_url="http://localhost:8888", **kwargs):
+    def __init__(self, df, params=[], trim_factor=1, logify=False, output='notebook', port=5006, notebook_url="http://localhost:8888", **kwargs):
         self.df = df.iloc[::trim_factor].reset_index(drop=True)
         self.params = params
         self.logify = logify
@@ -17,17 +17,14 @@ class BKCorner():
             reset_output()
             output_notebook()
             show(self.modify_doc, notebook_url=notebook_url)
-        else:
+        elif output == 'server':
             reset_output()
-            server = Server({'/': self.modify_doc})
+            server = Server({'/': self.modify_doc}, port=port)
             server.start()
             try:
-                server = Server({'/': self.modify_doc})
                 server.run_until_shutdown()
             except:
-                pass
-                #print("Server running")
-            server.show("/")
+                print("Server already running")
             self.server = server
 
     def modify_doc(self, doc):
